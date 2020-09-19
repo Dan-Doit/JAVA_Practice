@@ -14,11 +14,18 @@ public class FrontEnd {
 	private void entrance() {
 		print(this.title);
 		print("___________________________________________________");
-		print("\n                                             입력해주세요\n\n                0.취소               1.실행");
+		print("\n\t\t       입력해주세요\n\n                0.취소               1.실행");
 		print("___________________________________________________");
 		String text;
 		text = input();
-		System.out.println(text);
+		
+		if (text.equals("1")) {
+			System.out.println("실행되었습니다.");	
+		}else if(text.equals("0")){
+			System.out.println("종료되었습니다.");
+		}else {
+			System.out.println("잘못입력하였습니다.");
+		}
 	}
 	
 	private String input() {

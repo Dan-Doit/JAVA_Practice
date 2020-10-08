@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
+
+
 public class FrontController {
 	Scanner sc;
 
@@ -18,7 +20,10 @@ public class FrontController {
 		String[] logInfo;
 		String[] goodsInfo;
 		String[][] goodsList = null;
+		String[][] salesList = null;
 		String select;
+		String ordCode;
+		String goodsCode;
 		BackController bc = new BackController();
 		while (true) {	                   	        //1. logIn  : 성공 --> 2.    실패 --> 1.
 			String[] user = logIn(Main);
@@ -36,12 +41,12 @@ public class FrontController {
 
 					case "1":
 						while(true) {
-							String goodsCode = this.sales(Main, logInfo);
+							goodsCode = this.sales(Main, logInfo);
 							if(goodsCode.equals("0")) {break;}
 							while(true) {
 								goodsInfo = bc.getGoodsInfo(goodsCode);
 								// 굿즈 세탁기 돌리기
-								goodsList = summaryGoods(goodsInfo, goodsList);
+								if(goodsInfo!=null) {goodsList = summaryGoods(goodsInfo, goodsList);}
 								// 오버로딩
 								goodsCode = sales(Main, logInfo, goodsList);
 
@@ -70,7 +75,24 @@ public class FrontController {
 						}
 						break;
 					case "2":
+						byte count = 0; 
+						ordCode = salesCancel(Main, logInfo);
+						salesList = bc.searchOrder(ordCode);
+						while(true) {
 
+							goodsCode = salesCancel(Main, logInfo, salesList, count);
+							count = 1;
+							if(goodsCode.equals("0")) {break;}
+							else if(goodsCode.equals("A")){
+								 salesList = allCancel(Main,logInfo,salesList);
+								 bc.cancelInfo(ordCode, salesList);
+								 salesList = null;
+								 break;
+							}
+							else {
+								salesList = countCancel(goodsCode, salesList, bc, ordCode);
+							}
+						}
 						break;
 					case "3":
 						while(true) {
@@ -91,6 +113,130 @@ public class FrontController {
 			}
 		}
 		print("\n\n [ POS를 종료합니다 ] ");
+	}
+	
+	
+	
+	
+
+	// 반품구현
+	private String salesCancel(String Main, String[] logInfo) {
+		String uniqCode;
+		this.print(Main);
+
+		this.print(" [ ");
+		for(int i=0; i<logInfo.length; i++) {
+			this.print(logInfo[i]);
+			if(i!=logInfo.length-1) {this.print("    ");}
+		}
+		this.print(" ]\n\n");
+
+		this.print(" [ 상품반품 ]\n\n");
+		print(" [ 코드입력 ] : ");
+		uniqCode = sc.next();
+
+		return uniqCode;
+	}
+	// 반품구현 오버로드
+	private String salesCancel(String Main, String[] logInfo, String[][] salesList, byte count) {
+		String goodsCode;
+		int tot = 0;
+		this.print(Main);
+
+		this.print(" [ ");
+		for(int i=0; i<logInfo.length; i++) {
+			this.print(logInfo[i]);
+			if(i!=logInfo.length-1) {this.print("    ");}
+		}
+		this.print(" ]\n\n");
+
+		this.print(" [ 상품반품 ] \n\n");
+		// 상품리스트 다차원 배열
+		print(" -------------------------------------------------- \n"+
+				" 상품코드           상품명            단가            수량 \n" +
+				" -------------------------------------------------- \n");
+		if(salesList != null) {
+			for (int i = 0; i < salesList.length; i++) {
+				for (int j = 0; j < salesList[0].length; j++) {
+					print(" " + salesList[i][j] + "\t\t");
+
+				}
+				tot += (Integer.parseInt(salesList[i][2])*Integer.parseInt(salesList[i][3]));
+				print("\n");
+			}
+		}
+		print(" -------------------------------------------------- \n");
+		Date now = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd hh:mm");
+		String uniCode = sdf.format(now);
+		print(" [ 합계 금액 ] : " + tot + "        [ 현재 시간 ] : " + uniCode + "\n" );
+		print(" -------------------------------------------------- \n");
+
+		print(" [ 상품반품 ]\n\n");
+		if(count==0) {
+		print(" [ 전부 반품은 A를 입력해주세요 ]\n");}else {
+
+		print(" [ 반품을 끝내시려면 n을 입력해주세요 ]\n");
+		}
+		print(" [ 반품상품코드 입력 ] : ");
+		goodsCode = sc.next();
+
+		return goodsCode;
+	}
+	
+	// 한번에 캔슬하기
+	private String[][] allCancel(String Main, String[] logInfo ,String[][] salesList) {
+		for (int i = 0; i < salesList.length; i++) {
+			salesList[i][3] = "-"+salesList[i][3];
+		}
+		int tot = 0;
+		this.print(Main);
+
+		this.print(" [ ");
+		for(int i=0; i<logInfo.length; i++) {
+			this.print(logInfo[i]);
+			if(i!=logInfo.length-1) {this.print("    ");}
+		}
+		this.print(" ]\n\n");
+
+		this.print(" [ 상품반품 ] \n\n");
+		// 상품리스트 다차원 배열
+		print(" -------------------------------------------------- \n"+
+				" 상품코드           상품명            단가            수량 \n" +
+				" -------------------------------------------------- \n");
+		if(salesList != null) {
+			for (int i = 0; i < salesList.length; i++) {
+				for (int j = 0; j < salesList[0].length; j++) {
+					print(" " + salesList[i][j] + "\t\t");
+
+				}
+				tot += (Integer.parseInt(salesList[i][2])*Integer.parseInt(salesList[i][3]));
+				print("\n");
+			}
+		}
+		print(" -------------------------------------------------- \n");
+		Date now = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd hh:mm");
+		String uniCode = sdf.format(now);
+		print(" [ 합계 금액 ] : " + tot + "        [ 현재 시간 ] : " + uniCode + "\n" );
+		print(" -------------------------------------------------- \n");
+
+		print(" [ 상품반품 ]\n\n");
+		print(" [ 정상적으로 판품처리 되었습니다 ]");
+		return salesList;
+	}
+	
+	// 캔슬 하나씩
+	private String[][] countCancel(String goodsCode, String[][] salesList, BackController bc,String ordCode) {
+		
+		for (int i = 0; i < salesList.length; i++) {
+			if(goodsCode.equals(salesList[i][0])) {
+				salesList[i][3] = (Integer.parseInt(salesList[i][3])-1)+"";
+				bc.cancelInfo(ordCode, salesList[i]);
+				return salesList;
+			}
+		}
+		return salesList;
 	}
 
 	// LogIn Job Contol
@@ -238,13 +384,15 @@ public class FrontController {
 		print(" -------------------------------------------------- \n"+
 				" 상품코드           상품명            단가            수량 \n" +
 				" -------------------------------------------------- \n");
-		for (int i = 0; i < goodsList.length; i++) {
-			for (int j = 0; j < goodsList[0].length-2; j++) {
-				print(" " + goodsList[i][j] + "\t\t");
+		if(goodsList != null) {
+			for (int i = 0; i < goodsList.length; i++) {
+				for (int j = 0; j < goodsList[0].length-2; j++) {
+					print(" " + goodsList[i][j] + "\t\t");
 
+				}
+				tot += (Integer.parseInt(goodsList[i][2])*Integer.parseInt(goodsList[i][3]));
+				print("\n");
 			}
-			tot += (Integer.parseInt(goodsList[i][2])*Integer.parseInt(goodsList[i][3]));
-			print("\n");
 		}
 		print(" -------------------------------------------------- \n");
 		Date now = new Date();
@@ -259,26 +407,46 @@ public class FrontController {
 
 		return goodsCode;
 	}
-
+	// 데이터 스택쌓기
 	private String[][] summaryGoods(String[] newGoods, String[][] goodsList) {
-		String[][] temp = null;
-		if (goodsList==null) {
-			goodsList = new String[1][];
-		}else {
-			temp = new String[goodsList.length][];
-			for (int i = 0; i < goodsList.length; i++) {
-				temp[i] = goodsList[i];
-			}
-			goodsList = null;
-			goodsList = new String[temp.length+1][];
 
-			for (int i = 0; i < temp.length; i++) {
-				goodsList[i] =  temp[i];
+		// 유통기한 처리
+		Date now = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		String today = sdf.format(now);
+		// 유통기한이 오늘보다 크면 스택 아니면 그대로 반출
+		if (Integer.parseInt(newGoods[4])>=Integer.parseInt(today)) {
+
+			String[][] temp = null;
+			if (goodsList==null) {
+				goodsList = new String[1][];
+			}else {
+
+				// 중복값 처리
+				for (int i = 0; i < goodsList.length; i++) {
+					if(newGoods[0].equals(goodsList[i][0])) {
+						goodsList[i][3] = (Integer.parseInt(goodsList[i][3]) + 1) + "";
+						return goodsList;
+					}
+				}
+
+
+				temp = new String[goodsList.length][];
+				for (int i = 0; i < goodsList.length; i++) {
+					temp[i] = goodsList[i];
+				}
+				goodsList = null;
+				goodsList = new String[temp.length+1][];
+
+				for (int i = 0; i < temp.length; i++) {
+					goodsList[i] =  temp[i];
+				}
 			}
+			goodsList[goodsList.length-1] = newGoods;
 		}
-		goodsList[goodsList.length-1] = newGoods;
 		return goodsList;
 	}
+
 
 	// payment
 	private boolean payments(String[][] goodsInfoList) {

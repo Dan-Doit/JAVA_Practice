@@ -221,7 +221,7 @@ public class DataAccessObject {
 			}
 			br.close();
 		} catch (Exception e) {
-			System.out.println("오류남 ㅅㄱ");
+			System.out.println("\n [ 등록된 데이터값이 없습니다!! ] ");
 		}
 	}
 
@@ -248,6 +248,59 @@ public class DataAccessObject {
 		}
 
 		return result;
+	}
+
+	public boolean stackSalesInfo(int fileIndex,GoodsInfoBean gib) {
+		boolean result = false;
+		String record;
+		file = new File(filePath[fileIndex]);
+		
+		try {
+			bw = new BufferedWriter(new FileWriter(file,true));
+
+			record = gib.getUniqCode() + "," + gib.getGoodsCode() + "," +
+					gib.getGoodsName() + "," + gib.getGoodsPrice() + "," +
+					gib.getGoodsqty() + "\n";
+			bw.write(record);
+			bw.flush();
+			bw.close();
+			result = true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+	public ArrayList<GoodsInfoBean> getSalesList(GoodsInfoBean gib,int fileIndex) {
+		ArrayList<GoodsInfoBean> salesList = new ArrayList<GoodsInfoBean>();
+		String record;
+		String[] temp;
+		file = new File(filePath[fileIndex]);	
+		String goodsCode = gib.getUniqCode();
+		try {
+			br = new BufferedReader(new FileReader(file));
+
+			while((record=br.readLine())!=null) {
+				temp = record.split(",");
+				// 20201007132918,3001,안성탕면팩,3000,1
+				if(goodsCode.equals(temp[0])) {
+					gib = new GoodsInfoBean();
+					gib.setGoodsCode(temp[1]);
+					gib.setGoodsName(temp[2]);
+					gib.setGoodsPrice(Integer.parseInt(temp[3]));
+					gib.setGoodsqty(Integer.parseInt(temp[4]));
+
+					salesList.add(gib);
+				}
+			}
+			br.close();
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+		return salesList;
 	}
 }
 

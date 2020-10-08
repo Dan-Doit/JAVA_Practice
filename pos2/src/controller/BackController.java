@@ -68,7 +68,7 @@ public class BackController {
 		GoodsInfoBean gib = new GoodsInfoBean();
 		// bean 저장
 		gib.setGoodsCode(goodsCode);
-		ss.entrance(gib);
+		ss.entrance(gib,"1");
 
 		// Bean 값 배열로저장
 		if(gib.getGoodsName()!=null) {
@@ -102,5 +102,55 @@ public class BackController {
 	}
 	
 
+	public String[][] searchOrder(String ordCode) {
+		GoodsInfoBean gib = new GoodsInfoBean();
+		ArrayList<GoodsInfoBean> salesList;
 
+		gib.setUniqCode(ordCode);
+		salesList = ss.entrance(gib,"2");
+		String[][] arrSalesList = new String[salesList.size()][4];
+		
+		for (int i = 0; i < salesList.size(); i++) {
+			arrSalesList [i][0]= salesList.get(i).getGoodsCode();
+			arrSalesList [i][1]= salesList.get(i).getGoodsName();
+			arrSalesList [i][2]= salesList.get(i).getGoodsPrice()+"";
+			arrSalesList [i][3]= salesList.get(i).getGoodsqty()+"";
+		}    
+		
+		return arrSalesList;
+	}
+	
+	public void cancelInfo(String ordCode, String[][] cancelList) {
+		ArrayList<GoodsInfoBean> arrCancelList = new ArrayList<GoodsInfoBean>();
+		GoodsInfoBean gib;
+		
+		for (int i = 0; i < cancelList.length; i++) {
+			gib = new GoodsInfoBean();
+			gib.setGoodsCode(cancelList[i][0]);
+			gib.setGoodsName(cancelList[i][1]);
+			gib.setGoodsPrice(Integer.parseInt(cancelList[i][2]));
+			gib.setGoodsqty(Integer.parseInt(cancelList[i][3]));
+			gib.setUniqCode(ordCode);
+			
+			arrCancelList.add(gib);
+		}
+		
+		ss.entrance(arrCancelList);
+		
+	}
+	
+	public void cancelInfo(String ordCode, String[] cancelGoods) {
+		
+		GoodsInfoBean gib;
+		
+			gib = new GoodsInfoBean();
+			gib.setGoodsCode(cancelGoods[0]);
+			gib.setGoodsName(cancelGoods[1]);
+			gib.setGoodsPrice(Integer.parseInt(cancelGoods[2]));
+			gib.setGoodsqty(-1);
+			gib.setUniqCode(ordCode);
+		
+		ss.entrance(gib,"3");
+		
+	}
 }

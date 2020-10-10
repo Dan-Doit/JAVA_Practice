@@ -1,0 +1,23 @@
+
+# Greedy Question for beginner
+# 랜덤 번호를 받아 그 수들을 m 번 더할때 k번 중복되는 알고리즘
+
+n ,m ,k = map(int,input().split())   #변수들을 부여받음
+arr = list(map(int,input().split())) #랜덤 번호
+result = 0
+
+#가장 큰수와 가장작은수 만들기
+arr.sort()
+max = arr[-1]
+min = arr[-2]
+print(max,min)
+
+# n 의 리스트 숫자중 m번 큰숫자의 연속k번과 2번째 큰수의 덧샘 알고리즘
+for i in range(m):
+    if i < k:
+        result = result + max
+    else:
+        result = result + min
+        k = k + k
+
+print(result)

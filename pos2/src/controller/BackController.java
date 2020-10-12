@@ -5,17 +5,20 @@ import java.util.ArrayList;
 import data.GoodsInfoBean;
 import data.UserInfoBean;
 import services.Access;
+import services.Managements;
 import services.Sales;
 
 public class BackController {
 
 	private Access ac;
 	private Sales ss;
+	private Managements mg;
 	private String[] userAccess;
 
 	public BackController() {
 		ac = new Access();
 		ss = new Sales();
+		mg = new Managements();
 
 
 	}
@@ -110,13 +113,14 @@ public class BackController {
 		salesList = ss.entrance(gib,"2");
 		String[][] arrSalesList = new String[salesList.size()][4];
 		
+		if(salesList!=null) {
 		for (int i = 0; i < salesList.size(); i++) {
 			arrSalesList [i][0]= salesList.get(i).getGoodsCode();
 			arrSalesList [i][1]= salesList.get(i).getGoodsName();
 			arrSalesList [i][2]= salesList.get(i).getGoodsPrice()+"";
 			arrSalesList [i][3]= salesList.get(i).getGoodsqty()+"";
 		}    
-		
+		}
 		return arrSalesList;
 	}
 	
@@ -152,5 +156,26 @@ public class BackController {
 		
 		ss.entrance(gib,"3");
 		
+	}
+	public void goodsReg(String[] goodsInfo) {
+		GoodsInfoBean gib =  new GoodsInfoBean();
+		
+		gib.setGoodsCode(goodsInfo[0]);
+		gib.setGoodsName(goodsInfo[1]);
+		gib.setGoodsPrice(Integer.parseInt(goodsInfo[2]));
+		gib.setExpireDate(goodsInfo[3]);
+		gib.setGoodsqty(Integer.parseInt(goodsInfo[4]));
+		gib.setSafetyQty(goodsInfo[5]);
+		
+		mg.entrance(1, gib);
+	}
+	
+	public void goodsPriceMod(String[] goodsInfo) {
+		GoodsInfoBean gib = new GoodsInfoBean();
+		gib.setGoodsCode(goodsInfo[0]);
+		gib.setGoodsPrice(Integer.parseInt(goodsInfo[1]));
+		
+		mg.entrance(2, gib);
+
 	}
 }

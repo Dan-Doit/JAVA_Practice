@@ -11,12 +11,12 @@ public class FrontController {
 
 	public FrontController() {
 		sc = new Scanner(System.in);
-		this.controlTower(this.makeTitle(),regTitle());
+		this.controlTower(this.makeTitle(),regTitle(),goodsTitle());
 		sc.close();
 	}
 
 	// Job Control
-	private void controlTower(String Main,String[] regMain) {		// Request : controlTower --> Server
+	private void controlTower(String Main,String[] regMain,String[] goodsTitle) {		// Request : controlTower --> Server
 		String[] logInfo;
 		String[] goodsInfo;
 		String[][] goodsList = null;
@@ -77,21 +77,26 @@ public class FrontController {
 					case "2":
 						byte count = 0; 
 						ordCode = salesCancel(Main, logInfo);
-						salesList = bc.searchOrder(ordCode);
-						while(true) {
+						if (ordCode.length()==14) {
+							salesList = bc.searchOrder(ordCode);
+							while(true) {
 
-							goodsCode = salesCancel(Main, logInfo, salesList, count);
-							count = 1;
-							if(goodsCode.equals("0")) {break;}
-							else if(goodsCode.equals("A")){
-								 salesList = allCancel(Main,logInfo,salesList);
-								 bc.cancelInfo(ordCode, salesList);
-								 salesList = null;
-								 break;
+								goodsCode = salesCancel(Main, logInfo, salesList, count);
+								count = 1;
+								if(goodsCode.equals("0")) {break;}
+								else if(goodsCode.equals("A")){
+									salesList = allCancel(Main,logInfo,salesList);
+									bc.cancelInfo(ordCode, salesList);
+									salesList = null;
+									break;
+								}
+								else {
+									salesList = countCancel(goodsCode, salesList, bc, ordCode);
+									if(goodsCode.equals("n")) {break;}
+								}
 							}
-							else {
-								salesList = countCancel(goodsCode, salesList, bc, ordCode);
-							}
+						}else {
+							print(" [ 없는 코드입니다 ]");
 						}
 						break;
 					case "3":
@@ -104,7 +109,15 @@ public class FrontController {
 						}
 
 					case "4":
-
+						while(true) {
+							ordCode = selectManagement(Main, logInfo);
+							if(ordCode.equals("1")){
+								bc.goodsReg(goodsReg(Main, logInfo, goodsTitle));
+							}else if(ordCode.equals("2")) {
+								bc.goodsPriceMod(goodsPriceMod(Main, logInfo));
+								break;
+							}else {break;}
+						}
 						break;
 
 					}
@@ -112,12 +125,50 @@ public class FrontController {
 				logInfo = null;
 			}
 		}
+		print(Main);
 		print("\n\n [ POS를 종료합니다 ] ");
 	}
-	
-	
-	
-	
+
+	private String[] goodsPriceMod(String Main,String[] logInfo) {
+		String[] userInfo = new String[2];
+
+		this.print(Main);
+
+		this.print(" [ ");
+		for(int i=0; i<logInfo.length; i++) {
+			this.print(logInfo[i]);
+			if(i!=logInfo.length-1) {this.print("    ");}
+		}
+		this.print(" ]\n\n");
+
+		this.print(" [ 상품 단가 수정 ]\n\n"); 
+		this.print(" [ Goods Code ] : ");
+		userInfo[0] = sc.next();
+		this.print(" [ Goods Price Of Mpdify ]   : ");
+		userInfo[1] = sc.next();
+
+		return userInfo;
+	}
+
+	private String[] goodsReg(String Main, String[] logInfo, String[] goodsTitle) {
+		String[] goodsInfo = new String[6];
+		this.print(Main);
+
+		this.print(" [ ");
+		for(int i=0; i<logInfo.length; i++) {
+			this.print(logInfo[i]);
+			if(i!=logInfo.length-1) {this.print("    ");}
+		}
+		this.print(" ]\n\n");
+
+		print(" [ 상품 등록 ]\n\n");
+
+		for (int i = 0; i < goodsTitle.length; i++) {
+			print(goodsTitle[i]);
+			goodsInfo[i] = sc.next();
+		}
+		return goodsInfo;
+	}
 
 	// 반품구현
 	private String salesCancel(String Main, String[] logInfo) {
@@ -174,16 +225,16 @@ public class FrontController {
 
 		print(" [ 상품반품 ]\n\n");
 		if(count==0) {
-		print(" [ 전부 반품은 A를 입력해주세요 ]\n");}else {
+			print(" [ 전부 반품은 A를 입력해주세요 ]\n");}else {
 
-		print(" [ 반품을 끝내시려면 n을 입력해주세요 ]\n");
-		}
+				print(" [ 반품을 끝내시려면 n을 입력해주세요 ]\n");
+			}
 		print(" [ 반품상품코드 입력 ] : ");
 		goodsCode = sc.next();
 
 		return goodsCode;
 	}
-	
+
 	// 한번에 캔슬하기
 	private String[][] allCancel(String Main, String[] logInfo ,String[][] salesList) {
 		for (int i = 0; i < salesList.length; i++) {
@@ -225,10 +276,10 @@ public class FrontController {
 		print(" [ 정상적으로 판품처리 되었습니다 ]");
 		return salesList;
 	}
-	
+
 	// 캔슬 하나씩
 	private String[][] countCancel(String goodsCode, String[][] salesList, BackController bc,String ordCode) {
-		
+
 		for (int i = 0; i < salesList.length; i++) {
 			if(goodsCode.equals(salesList[i][0])) {
 				salesList[i][3] = (Integer.parseInt(salesList[i][3])-1)+"";
@@ -256,6 +307,25 @@ public class FrontController {
 			userInfo[2] = sc.next();
 		}
 		return userInfo;
+	}
+
+	// Services Selection Job Control
+	private String selectManagement(String title, String[] logInfo) {
+
+		print(title);
+		this.print(" [ ");
+		for(int i=0; i<logInfo.length; i++) {
+			this.print(logInfo[i]);
+			if(i!=logInfo.length-1) {this.print("    ");}
+		}
+		this.print(" ]\n\n");
+
+		this.print(" [서비스 선택]\n\n");
+		this.print(" 1. 상품등록           2. 상품수정 \n");
+		print(" 0. 뒤로가기\n\n");
+
+		this.print(" ________________________________ Select : ");
+		return sc.next();
 	}
 
 	// Services Selection Job Control
@@ -497,6 +567,18 @@ public class FrontController {
 		Questions[2] = " [ Employee  Name ] : ";
 		Questions[3] = " [ Employee Phone ] : ";
 		Questions[4] = " [ Employee Level ] : ";
+		return Questions;
+	}
+
+	// 질문 생성
+	private String[] goodsTitle() {
+		String[] Questions = new String[6];
+		Questions[0] = " [   Goods Code    ] : ";
+		Questions[1] = " [   Goods Name    ] : ";
+		Questions[2] = " [   Goods Price   ] : ";
+		Questions[3] = " [ Goods ExpireDay ] : ";
+		Questions[4] = " [ Goods Quantity  ] : ";
+		Questions[5] = " [  Goods SafeQty  ] : ";
 		return Questions;
 	}
 

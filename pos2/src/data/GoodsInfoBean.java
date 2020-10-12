@@ -8,7 +8,14 @@ public class GoodsInfoBean {
 	private int goodsPrice;
 	private int goodsqty;
 	private String expireDate;
+	private String safetyQty;
 	
+	public String getSafetyQty() {
+		return safetyQty;
+	}
+	public void setSafetyQty(String safetyQty) {
+		this.safetyQty = safetyQty;
+	}
 	public String getUniqCode() {
 		return uniqCode;
 	}

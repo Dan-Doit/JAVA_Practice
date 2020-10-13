@@ -3,10 +3,8 @@ package data;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -84,7 +82,6 @@ public class DataAccessObject {
 				if (uib.getEmployeeCode().equals(record.substring(0,4))) {
 					String pass = record.substring(5);
 					if (uib.getAccessCode().equals(pass.substring(0,pass.indexOf(",")))) {
-						//7777,1234,강동훈,010-5680-8050,M
 						pass = pass.substring(pass.indexOf(",")+1);
 
 						uib.setUserName(pass.substring(0, pass.indexOf(",")));
@@ -107,7 +104,6 @@ public class DataAccessObject {
 			}
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -325,10 +321,11 @@ public class DataAccessObject {
 			e.printStackTrace();
 		}
 	}
-	public ArrayList<GoodsInfoBean> goodsGetAll(int fileIndex, GoodsInfoBean gib) {
+	public ArrayList<GoodsInfoBean> goodsGetAll(int fileIndex) {
 
 		ArrayList<GoodsInfoBean> goodsList = new ArrayList<GoodsInfoBean>();
 		file = new File(filePath[fileIndex]);
+		GoodsInfoBean gib;
 		String temp;
 		String[] record;
 		try {
@@ -355,16 +352,47 @@ public class DataAccessObject {
 		return goodsList;
 	}
 
-	
+	public ArrayList<GoodsInfoBean> goodsGetHis(int fileIndex,GoodsInfoBean gib) {
+
+		ArrayList<GoodsInfoBean> goodsList = new ArrayList<GoodsInfoBean>();
+		file = new File(filePath[fileIndex]);
+		String compare = gib.getUniqCode();
+		String temp;
+		String[] record;
+		try {
+			fr = new FileReader(file);
+			br = new BufferedReader(fr);
+			// 20201007132918,1001,새우깡,1500,1
+			while((temp = br.readLine())!=null) {
+				record = temp.split(",") ;
+				if(record[0].substring(0,compare.length()).equals(compare)) {
+					gib = new GoodsInfoBean();
+					
+					gib.setGoodsCode(record[1]);
+					gib.setGoodsName(record[2]);
+					gib.setGoodsPrice(Integer.parseInt(record[3]));
+					gib.setGoodsqty(Integer.parseInt(record[4]));
+
+					goodsList.add(gib);
+				}
+			}
+			br.close();
+		} catch (Exception e) {
+			System.out.println(" [ 등록된 정보가 없습니다 상품을 먼저 등록해주세요 ]");
+		}
+		return goodsList;
+	}
+
+
 	public void goodsPriceMod(int fileIndex, ArrayList<GoodsInfoBean> goodsList) {
-		
+
 		file = new File(filePath[fileIndex]);
 		String record;
-		
+
 		try {
 			fw = new FileWriter(file);
 			bw = new BufferedWriter(fw);
-			
+
 			for (int i = 0; i < goodsList.size(); i++) {
 				record = goodsList.get(i).getGoodsCode() + "," +
 						goodsList.get(i).getGoodsName() + "," +
@@ -372,12 +400,12 @@ public class DataAccessObject {
 						goodsList.get(i).getExpireDate() + "," +
 						goodsList.get(i).getGoodsqty() + "," +
 						goodsList.get(i).getSafetyQty() + "\n";
-				
+
 				bw.write(record);
 				bw.flush();
 			}
 			bw.close();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

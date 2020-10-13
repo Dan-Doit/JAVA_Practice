@@ -13,7 +13,8 @@ public class Managements {
 		dao = new DataAccessObject();
 	}
 
-	public void entrance(int reqValue, GoodsInfoBean gib) {
+	public ArrayList<GoodsInfoBean> entrance(int reqValue, GoodsInfoBean gib) {
+		ArrayList<GoodsInfoBean> goOut = null;
 		switch (reqValue) {
 		case 1:
 			goodsReg(gib);
@@ -22,7 +23,14 @@ public class Managements {
 		case 2:
 			goodsPriceMod(gib);;
 			break;
+
+
+		case 3:
+			goOut = getDailySales(gib);;
+			break;
 		}
+		
+		return goOut;
 	}
 
 
@@ -30,23 +38,51 @@ public class Managements {
 		dao.goodsReg(3, gib);
 	}
 
+
 	private void goodsPriceMod(GoodsInfoBean gib) {
 		ArrayList<GoodsInfoBean> goodsList;
-		String goodsCode;
-		int goodsPrice;
-		goodsCode = gib.getGoodsCode();
-		goodsPrice = gib.getGoodsPrice();
 
-		goodsList = dao.goodsGetAll(3, gib);
+		goodsList = dao.goodsGetAll(3);
 
 		for (int i = 0; i < goodsList.size(); i++) {
-			if(goodsList.get(i).getGoodsCode().equals(goodsCode)) {
-				goodsList.get(i).setGoodsPrice(goodsPrice);
+			if(goodsList.get(i).getGoodsCode().equals(gib.getGoodsCode())) {
+				goodsList.get(i).setGoodsPrice(gib.getGoodsPrice());
 				break;
 			}
 		}
 		dao.goodsPriceMod(3, goodsList);
 	}
+	
+	private ArrayList<GoodsInfoBean> getDailySales(GoodsInfoBean gib) {
+
+		ArrayList<GoodsInfoBean> goOut;
+		goOut = dao.goodsGetHis(2,gib);
+		
+		return goOut;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

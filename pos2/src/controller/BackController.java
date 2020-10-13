@@ -178,4 +178,27 @@ public class BackController {
 		mg.entrance(2, gib);
 
 	}
+	// 일별 매출 현황 정보 가져오기
+	public String[][] getDailySales(String days) {
+		ArrayList<GoodsInfoBean> goOut;
+		GoodsInfoBean gib = new GoodsInfoBean();
+		gib.setUniqCode(days);
+		int count = 0;
+		
+		goOut = mg.entrance(3, gib);
+		String[][] dailyList = new String[goOut.size()][4];
+
+		for (GoodsInfoBean i : goOut) {
+			dailyList[count][0] = i.getGoodsCode();
+			dailyList[count][1] = i.getGoodsName();
+			dailyList[count][2] = i.getGoodsPrice()+"";
+			dailyList[count][3] = i.getGoodsqty()+"";
+			count++;
+		}
+		return dailyList;
+	}
+	
+	
+	
+	
 }

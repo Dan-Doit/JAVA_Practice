@@ -107,16 +107,42 @@ public class FrontController {
 								user = bc.userAccMod(userAccMod(Main, logInfo));
 							}else {break;}
 						}
-
+						break;
 					case "4":
 						while(true) {
 							ordCode = selectManagement(Main, logInfo);
 							if(ordCode.equals("1")){
 								bc.goodsReg(goodsReg(Main, logInfo, goodsTitle));
+								print("\n\n [ 등록 완료! ]");
 							}else if(ordCode.equals("2")) {
 								bc.goodsPriceMod(goodsPriceMod(Main, logInfo));
+								print("\n\n [ 수정 완료! ]");
+
+							}else if(ordCode.equals("3")) {
+								while(true) {
+									String days = dailySales(Main,ordCode,logInfo);
+									if (days.length()==8) {salesList = bc.getDailySales(days);
+
+									if(dailySales(Main, days, logInfo, salesList)){
+										break;
+									}
+									}else {print("\n\n [ 8자리 숫자를 입력해 주세요 ]");}
+								}
 								break;
-							}else {break;}
+
+							}else if(ordCode.equals("4")) {
+								while(true) {
+									String days = dailySales(Main,ordCode,logInfo);
+									if (days.length()==6) {salesList = bc.getDailySales(days);
+
+									if(dailySales(Main, days, logInfo, salesList)){
+										break;
+									}
+									}else {print("\n\n [ 6자리 숫자를 입력해 주세요 ]");}
+								}
+								break;
+							}
+							else {break;}
 						}
 						break;
 
@@ -127,6 +153,69 @@ public class FrontController {
 		}
 		print(Main);
 		print("\n\n [ POS를 종료합니다 ] ");
+	}
+
+
+	// 일별 날짜 확인하기
+	private String dailySales(String Main,String ordCode, String[] logInfo) {
+		String days = new String();
+
+		this.print(Main);
+
+		this.print(" [ ");
+		for(int i=0; i<logInfo.length; i++) {
+			this.print(logInfo[i]);
+			if(i!=logInfo.length-1) {this.print("    ");}
+		}
+		this.print(" ]\n\n");
+		if(ordCode.equals("3")) {
+			this.print(" [ 검색할 8자리 날짜를 입력해주세요 ]\n\n"); }else {
+				this.print(" [ 검색할 6자리 날짜를 입력해주세요 ]\n\n"); 
+			}
+		this.print(" [ 날  짜 ] : ");
+		days = sc.next();
+
+		return days;
+	}
+	// 일별 날짜 프린트 하기
+	private boolean dailySales(String Main,String days, String[] logInfo, String[][] salesList) {
+		int tot = 0;
+		boolean isCountinue;
+
+		this.print(Main);
+
+		this.print(" [ ");
+		for(int i=0; i<logInfo.length; i++) {
+			this.print(logInfo[i]);
+			if(i!=logInfo.length-1) {this.print("    ");}
+		}
+		this.print(" ]\n\n");
+		print(" [ "+"카테고리 : "+days +" ]\n\n");
+		// 상품리스트 다차원 배열 출력
+		print(" -------------------------------------------------- \n"+
+				" 번호   상품코드         상품명          단가          수량 \n" +
+				" -------------------------------------------------- \n");
+		if(salesList != null) {
+			for (int i = 0; i < salesList.length; i++) {
+				for (int j = 0; j < salesList[0].length; j++) {
+					print(" " + salesList[i][j] + "\t\t");
+
+				}
+				tot += (Integer.parseInt(salesList[i][2])*Integer.parseInt(salesList[i][3]));
+				print("\n");
+			}
+		}
+		print(" -------------------------------------------------- \n");
+		Date now = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd hh:mm");
+		String uniCode = sdf.format(now);
+		print(" [ 합계 금액 ] : " + tot + "        [ 현재 시간 ] : " + uniCode + "\n" );
+		print(" -------------------------------------------------- \n");
+
+		this.print(" [ 더 진행하지 않으시려면 n을 입력해주세요 ] : ");
+		isCountinue = sc.next().equals("n")?true:false;
+
+		return isCountinue;
 	}
 
 	private String[] goodsPriceMod(String Main,String[] logInfo) {
@@ -322,6 +411,7 @@ public class FrontController {
 
 		this.print(" [서비스 선택]\n\n");
 		this.print(" 1. 상품등록           2. 상품수정 \n");
+		this.print(" 3. 일일매출           4. 월별매출 \n");
 		print(" 0. 뒤로가기\n\n");
 
 		this.print(" ________________________________ Select : ");

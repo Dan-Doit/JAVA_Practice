@@ -638,11 +638,8 @@ public class FrontController {
 		sb.append("\n");
 		sb.append("         Point Of Sales System v1.0\n");
 		sb.append("\n");
-		sb.append("                     ★★★★\n");
-		sb.append("                     ☆☆☆☆\n");
-		sb.append("                     ☆☆☆☆\n");
 		sb.append("\n");   
-		sb.append("                      Designed by AbJul\n");
+		sb.append("                      Designed by 3조\n");
 		sb.append("\n");
 		sb.append(" *************************************************\n");
 

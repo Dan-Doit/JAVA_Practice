@@ -178,14 +178,19 @@ public class BackController {
 		mg.entrance(2, gib);
 
 	}
-	// 일별 매출 현황 정보 가져오기
-	public String[][] getDailySales(String days) {
+	// 일별 월별 매출 현황 정보 가져오기
+	public String[][] getDailySales(String days, String ordCode) {
 		ArrayList<GoodsInfoBean> goOut;
 		GoodsInfoBean gib = new GoodsInfoBean();
 		gib.setUniqCode(days);
 		int count = 0;
 		
-		goOut = mg.entrance(3, gib);
+		if (ordCode.equals("5")){
+			goOut = mg.entrance(4, gib);
+		}else {
+			goOut = mg.entrance(3, gib);
+		}
+
 		String[][] dailyList = new String[goOut.size()][4];
 
 		for (GoodsInfoBean i : goOut) {
@@ -197,7 +202,6 @@ public class BackController {
 		}
 		return dailyList;
 	}
-	
 	
 	
 	

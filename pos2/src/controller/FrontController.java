@@ -121,7 +121,7 @@ public class FrontController {
 							}else if(ordCode.equals("3")) {
 								while(true) {
 									String days = dailySales(Main,ordCode,logInfo);
-									if (days.length()==8) {salesList = bc.getDailySales(days);
+									if (days.length()==8) {salesList = bc.getDailySales(days,ordCode);
 
 									if(dailySales(Main, days, logInfo, salesList)){
 										break;
@@ -133,7 +133,7 @@ public class FrontController {
 							}else if(ordCode.equals("4")) {
 								while(true) {
 									String days = dailySales(Main,ordCode,logInfo);
-									if (days.length()==6) {salesList = bc.getDailySales(days);
+									if (days.length()==6) {salesList = bc.getDailySales(days,ordCode);
 
 									if(dailySales(Main, days, logInfo, salesList)){
 										break;
@@ -141,6 +141,18 @@ public class FrontController {
 									}else {print("\n\n [ 6자리 숫자를 입력해 주세요 ]");}
 								}
 								break;
+							}else if(ordCode.equals("5")){
+								while(true) {
+									String days = dailySales(Main,ordCode,logInfo);
+									if (days.length()==6) {salesList = bc.getDailySales(days,ordCode);
+
+									if(bestGoods(Main, days, logInfo, salesList)){
+										break;
+									}
+									}else {print("\n\n [ 6자리 숫자를 입력해 주세요 ]");}
+								}
+								break;
+								
 							}
 							else {break;}
 						}
@@ -177,7 +189,50 @@ public class FrontController {
 
 		return days;
 	}
-	// 일별 날짜 프린트 하기
+	//  배스트 상품 프린트하기
+	private boolean bestGoods(String Main,String days, String[] logInfo, String[][] salesList) {
+		int tot = 0;
+		boolean isCountinue;
+
+		this.print(Main);
+
+		this.print(" [ ");
+		for(int i=0; i<logInfo.length; i++) {
+			this.print(logInfo[i]);
+			if(i!=logInfo.length-1) {this.print("    ");}
+		}
+		this.print(" ]\n\n\n");
+		print(" [ "+"카테고리 : "+days +" ]\n\n");
+		// 상품리스트 다차원 배열 출력
+		print(" -------------------------------------------------- \n"+
+				" 순위       상품코드        상품명            수량 \n" +
+				" -------------------------------------------------- \n");
+		if(salesList != null) {
+			for (int i = 0; i < salesList.length; i++) {
+				print("  " + (i+1) + "        ");
+				for (int j = 0; j < salesList[0].length; j++) {
+					if(j!=2) {
+					print(salesList[i][j] + "\t\t");
+					}
+				}
+				print("\n");
+			}
+		}
+		tot += (Integer.parseInt(salesList[0][2])*Integer.parseInt(salesList[0][3]));
+		print(" -------------------------------------------------- \n");
+		Date now = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd hh:mm");
+		String uniCode = sdf.format(now);
+		print(" [ 1위 팔린금액 ] : " + tot + "원   [ 현재 시간 ] : " + uniCode + "\n" );
+		print(" -------------------------------------------------- \n");
+
+		this.print(" [ 더 진행하지 않으시려면 n을 입력해주세요 ] : ");
+		isCountinue = sc.next().equals("n")?true:false;
+
+		return isCountinue;
+	}
+	
+	// 일월별 날짜 프린트 하기
 	private boolean dailySales(String Main,String days, String[] logInfo, String[][] salesList) {
 		int tot = 0;
 		boolean isCountinue;
@@ -193,7 +248,7 @@ public class FrontController {
 		print(" [ "+"카테고리 : "+days +" ]\n\n");
 		// 상품리스트 다차원 배열 출력
 		print(" -------------------------------------------------- \n"+
-				" 번호   상품코드         상품명          단가          수량 \n" +
+				"    상품코드         상품명          단가          수량 \n" +
 				" -------------------------------------------------- \n");
 		if(salesList != null) {
 			for (int i = 0; i < salesList.length; i++) {
@@ -412,6 +467,7 @@ public class FrontController {
 		this.print(" [서비스 선택]\n\n");
 		this.print(" 1. 상품등록           2. 상품수정 \n");
 		this.print(" 3. 일일매출           4. 월별매출 \n");
+		this.print(" 5. 월별 배스트 상품 조회 \n");
 		print(" 0. 뒤로가기\n\n");
 
 		this.print(" ________________________________ Select : ");

@@ -1,7 +1,7 @@
 package services;
 
 import java.util.ArrayList;
-
+import java.util.Comparator;
 import data.DataAccessObject;
 import data.GoodsInfoBean;
 
@@ -28,8 +28,13 @@ public class Managements {
 		case 3:
 			goOut = getDailySales(gib);;
 			break;
+
+
+		case 4:
+			goOut = getBestGoods(gib);
+			break;
 		}
-		
+
 		return goOut;
 	}
 
@@ -52,19 +57,52 @@ public class Managements {
 		}
 		dao.goodsPriceMod(3, goodsList);
 	}
-	
+
 	private ArrayList<GoodsInfoBean> getDailySales(GoodsInfoBean gib) {
 
 		ArrayList<GoodsInfoBean> goOut;
 		goOut = dao.goodsGetHis(2,gib);
-		
+
 		return goOut;
 	}
 
 
 
 
+	private ArrayList<GoodsInfoBean> getBestGoods(GoodsInfoBean gib) {
 
+		ArrayList<GoodsInfoBean> histories;
+		ArrayList<GoodsInfoBean> goOut = null;
+		histories = dao.goodsGetHis(2,gib);
+
+		for(GoodsInfoBean i : histories) {
+			if(goOut==null) {
+				goOut = new ArrayList<GoodsInfoBean>();
+				goOut.add(i);
+			}else {
+				boolean flag = true; 
+				for (int j = 0; j < goOut.size(); j++) {
+					if(i.getGoodsName().equals(goOut.get(j).getGoodsName())){
+						goOut.get(j).setGoodsqty(goOut.get(j).getGoodsqty() + i.getGoodsqty());
+						flag = false;
+						break;
+					}
+				}
+				if (flag) {goOut.add(i);}
+			}
+		}
+		
+		goOut.sort(new Comparator<GoodsInfoBean>() {
+
+			public int compare(GoodsInfoBean arg0, GoodsInfoBean arg1) {
+				
+				return arg1.getGoodsqty() - arg0.getGoodsqty();
+			}
+		});
+
+
+		return goOut;
+	}
 
 
 

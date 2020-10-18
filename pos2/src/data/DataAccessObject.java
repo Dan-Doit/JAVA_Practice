@@ -382,6 +382,7 @@ public class DataAccessObject {
 		}
 		return goodsList;
 	}
+	
 
 
 	public void goodsPriceMod(int fileIndex, ArrayList<GoodsInfoBean> goodsList) {

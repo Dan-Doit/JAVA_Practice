@@ -74,6 +74,7 @@ public class Managements {
 		ArrayList<GoodsInfoBean> histories;
 		ArrayList<GoodsInfoBean> goOut = null;
 		histories = dao.goodsGetHis(2,gib);
+		
 
 		for(GoodsInfoBean i : histories) {
 			if(goOut==null) {
@@ -91,6 +92,8 @@ public class Managements {
 				if (flag) {goOut.add(i);}
 			}
 		}
+		
+		
 		
 		goOut.sort(new Comparator<GoodsInfoBean>() {
 

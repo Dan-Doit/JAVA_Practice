@@ -23,21 +23,29 @@ public class BackController {
 
 	}
 
-	public String[] logIn(String[] userInfo) {		
+	public String[] logInOut(String[] userInfo) {		
 		UserInfoBean uib = new UserInfoBean();
-		uib.setRequestValue(userInfo[0]);   // Client로 부터 전달 받은 userInfo의 값을 UserInfoBean으로 복사
+		ArrayList<UserInfoBean> userinfo =  new ArrayList<UserInfoBean>();
+       // Client로 부터 전달 받은 userInfo의 값을 UserInfoBean으로 복사
 		uib.setEmployeeCode(userInfo[1]);
 		uib.setAccessCode(userInfo[2]);
+		uib.setStCode(userInfo[0]);
+		uib.setAccessState(Integer.parseInt(userInfo[3]));
 
-		ac.entrance(uib);
+		
+		if(uib.getAccessState()==1) {ac.entrance("A1",uib,userinfo);}
+		else {
+			ac.entrance("A4",uib,null);
+			userinfo = null;
+		}
 
-		if (uib.getUserName()!=null) {
-			userAccess = new String[4];
-			userAccess[0] = uib.getEmployeeCode();
-			userAccess[1] = uib.getUserName();
-			userAccess[2] = uib.isUserLevel()? "Manager":"Mate";
-			userAccess[3] = uib.getAccessTime();
-
+		if (userinfo != null && userinfo.get(0).getUserName()!=null) {
+			userAccess = new String[5];
+			userAccess[0] = userinfo.get(0).getEmployeeCode();
+			userAccess[1] = userinfo.get(0).getUserName();
+			userAccess[2] = userinfo.get(0).isUserLevel()? "Manager":"Mate";
+			userAccess[3] = userinfo.get(0).getAccessTime();
+			userAccess[4] = userinfo.get(0).getStCode();
 		}else {userAccess = null;
 		}
 		return userAccess;
@@ -48,21 +56,20 @@ public class BackController {
 		uib.setEmployeeCode(userInfo[0]);
 		uib.setAccessCode(userInfo[1]);
 		uib.setUserName(userInfo[2]);
-		uib.setUserPhone(userInfo[3]);
+		uib.setStCode(userInfo[3]);
 		uib.setUserLevel(userInfo[4].equals("Manager")?true:false);
-		uib.setRequestValue("A2");
-
-		ac.entrance(uib);
+		
+		ac.entrance("A2",uib,null);
 		return userAccess;
 	}
 
 	public String[] userAccMod(String[] userInfo) {
 		UserInfoBean uib = new UserInfoBean();
-		uib.setRequestValue(userInfo[0]);   // Client로 부터 전달 받은 userInfo의 값을 UserInfoBean으로 복사
+		// Client로 부터 전달 받은 userInfo의 값을 UserInfoBean으로 복사
 		uib.setEmployeeCode(userInfo[1]);
 		uib.setAccessCode(userInfo[2]);
 
-		ac.entrance(uib);
+		ac.entrance("A3",uib,null);
 
 		return userAccess;
 	}
@@ -191,13 +198,14 @@ public class BackController {
 			goOut = mg.entrance(3, gib);
 		}
 
-		String[][] dailyList = new String[goOut.size()][4];
+		String[][] dailyList = new String[goOut.size()][5];
 
 		for (GoodsInfoBean i : goOut) {
 			dailyList[count][0] = i.getGoodsCode();
 			dailyList[count][1] = i.getGoodsName();
 			dailyList[count][2] = i.getGoodsPrice()+"";
 			dailyList[count][3] = i.getGoodsqty()+"";
+			dailyList[count][4] = i.getAmount()+"";
 			count++;
 		}
 		return dailyList;

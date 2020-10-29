@@ -9,7 +9,14 @@ public class GoodsInfoBean {
 	private int goodsqty;
 	private String expireDate;
 	private String safetyQty;
+	private int Amount;
 	
+	public int getAmount() {
+		return Amount;
+	}
+	public void setAmount(int amount) {
+		Amount = amount;
+	}
 	public String getSafetyQty() {
 		return safetyQty;
 	}

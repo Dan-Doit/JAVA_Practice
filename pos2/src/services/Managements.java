@@ -9,9 +9,7 @@ public class Managements {
 
 	DataAccessObject dao;
 
-	public Managements() {
-		dao = new DataAccessObject();
-	}
+	public Managements() {}
 
 	public ArrayList<GoodsInfoBean> entrance(int reqValue, GoodsInfoBean gib) {
 		ArrayList<GoodsInfoBean> goOut = null;
@@ -38,13 +36,21 @@ public class Managements {
 		return goOut;
 	}
 
-
+	// GOODS 등록
 	private void goodsReg(GoodsInfoBean gib) {
+		
+		dao = new DataAccessObject();
+		dao.setAutoTransaction(false);
+		
 		dao.goodsReg(3, gib);
 	}
 
-
+	// GOODS 가격정보 수정
 	private void goodsPriceMod(GoodsInfoBean gib) {
+		
+		dao = new DataAccessObject();
+		dao.setAutoTransaction(false);
+		
 		ArrayList<GoodsInfoBean> goodsList;
 
 		goodsList = dao.goodsGetAll(3);
@@ -58,22 +64,29 @@ public class Managements {
 		dao.goodsPriceMod(3, goodsList);
 	}
 
+	// GOODS HISTORY 가져오기
 	private ArrayList<GoodsInfoBean> getDailySales(GoodsInfoBean gib) {
-
+		
+		dao = new DataAccessObject();
+		dao.setAutoTransaction(false);
+		
 		ArrayList<GoodsInfoBean> goOut;
-		goOut = dao.goodsGetHis(2,gib);
+		goOut = dao.goodsGetHis(gib);
 
 		return goOut;
 	}
 
 
 
-
+	// BEST 상품 추출
 	private ArrayList<GoodsInfoBean> getBestGoods(GoodsInfoBean gib) {
-
+		
+		dao = new DataAccessObject();
+		dao.setAutoTransaction(false);
+		
 		ArrayList<GoodsInfoBean> histories;
 		ArrayList<GoodsInfoBean> goOut = null;
-		histories = dao.goodsGetHis(2,gib);
+		histories = dao.goodsGetHis(gib);
 		
 
 		for(GoodsInfoBean i : histories) {

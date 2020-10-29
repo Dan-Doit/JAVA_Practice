@@ -1,20 +1,20 @@
 package data;
 
 public class UserInfoBean {
-	private String requestValue;
+	private String stCode;
 	private String employeeCode;
 	private String accessCode;
 	private String userName;
-	private String userPhone;
+	private int accessState;
 	private boolean userLevel; // true : manager   false : mate
 	private String accessTime;
 	
 	
-	public String getRequestValue() {
-		return requestValue;
+	public String getStCode() {
+		return stCode;
 	}
-	public void setRequestValue(String requestValue) {
-		this.requestValue = requestValue;
+	public void setStCode(String stCode) {
+		this.stCode = stCode;
 	}
 	public String getAccessTime() {
 		return accessTime;
@@ -40,11 +40,12 @@ public class UserInfoBean {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	public String getUserPhone() {
-		return userPhone;
+
+	public int getAccessState() {
+		return accessState;
 	}
-	public void setUserPhone(String userPhone) {
-		this.userPhone = userPhone;
+	public void setAccessState(int accessState) {
+		this.accessState = accessState;
 	}
 	public boolean isUserLevel() {
 		return userLevel;

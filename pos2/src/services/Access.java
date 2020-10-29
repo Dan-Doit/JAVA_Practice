@@ -1,24 +1,20 @@
 package services;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import data.DataAccessObject;
 import data.UserInfoBean;
 
 public class Access {
 
-	private DataAccessObject dao; 
+	DataAccessObject dao;
 
-	public Access() {
-		dao = new DataAccessObject();
-	}
+	public Access() { } 
 
-	public void entrance(UserInfoBean uib) {
-		switch (uib.getRequestValue()) {
+	public void entrance(String reqv, UserInfoBean uib,ArrayList<UserInfoBean> userinfo) {
+		switch (reqv) {
 		case "A1":
-			logIn(uib);
+			logIn(uib,userinfo);
 			break;
 		case "A2":
 			userReg(uib);
@@ -26,49 +22,86 @@ public class Access {
 		case "A3":
 			userMod(uib);
 			break;
+		case "A4":
+			logOut(uib);
+			break;
 		}
 
 
 	}
 
-	private void logIn(UserInfoBean uib) {
+	private void logIn(UserInfoBean uib, ArrayList<UserInfoBean> userinfo) {
+		dao = new DataAccessObject();
+		dao.setAutoTransaction(false);
 
-		if (dao.isEmployee(0, uib)) {	
-			if (dao.isAccess(0, uib)) {
-				Date now = new Date();
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd hh:mm:ss");
-				uib.setAccessTime(sdf.format(now));
+		if (dao.isEmployee(uib)) {	
 
-				dao.getUserInfo(0, uib);
-				dao.setLogInInfo(1, uib);
-				// 필요없는데이터 삭제
-				uib.setRequestValue(null);
-				uib.setAccessCode(null);				
+			if (dao.isAccess(uib)) {
+
+				if(dao.setLogInInfo(uib)) {
+
+					dao.getUserInfo(uib, userinfo);
+
+					// 필요없는데이터 삭제
+					uib.setAccessCode(null);	
+
+					dao.endAutoTransaction(true);	
+				}else {
+
+					dao.endAutoTransaction(false);	
+				}
+
+
+
 			}
 		}
-		// 로그인 성공 --> 
-		// parameter로 전달받은 uib에 저장
-		// 저장값  7777,훈짱,M, 20200924180000
+
 	}
+	
+	
+	private void logOut(UserInfoBean uib) {
+		
+		boolean tran = false;
+		dao = new DataAccessObject();
+		dao.setAutoTransaction(false);
+		
+		if(dao.setLogInInfo(uib)) tran = true;
+			
+		
+		dao.endAutoTransaction(tran);
+	}
+	
+
+
+	// 유저 등록
 	private void userReg(UserInfoBean uib) {
 
-		dao.setUserReg(0, uib);
+		boolean tran = false;
+
+		dao = new DataAccessObject();
+
+		dao.setAutoTransaction(false);
+
+		if(dao.setUserReg(uib)) {tran = true;}
+
+		dao.endAutoTransaction(tran);
+
 	}
 
+
+	// 유저 수정
 	private void userMod(UserInfoBean uib) {
-		// 빈 리스트값 수정하기
-		ArrayList<UserInfoBean> al ;
-		al = dao.getUserInfoMod(0);
+		boolean tran = false;
+		dao = new DataAccessObject();
+
+		dao.setAutoTransaction(false);
+
+		if(dao.setUserInfoMod(uib)) {tran = true;}
 		
-		for (int i = 0; i < al.size(); i++) {
-			if(uib.getEmployeeCode().equals(al.get(i).getEmployeeCode())) {
-				al.get(i).setAccessCode(uib.getAccessCode());
-				break;
-			}
-			
-		}
-		// 수정하는 매서드 호출
-		dao.setUserInfoMod(0, al);
+		dao.endAutoTransaction(tran);
+
+
 	}
+
 
 }

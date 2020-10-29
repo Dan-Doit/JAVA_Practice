@@ -29,7 +29,7 @@ public class FrontController {
 			String[] user = logIn(Main);
 			// Good Bye 탈출문
 			if (user==null) {break;}
-			logInfo = bc.logIn(user);
+			logInfo = bc.logInOut(user);
 
 			if (logInfo != null) {   //BackController 방만 만들어 놔도 몇번째 방이 null인지 모르기 때문에 null이 아닌걸로 인식됨.
 				while(true) {
@@ -159,8 +159,19 @@ public class FrontController {
 						break;
 
 					}
-				}		
+				
+				}
+				// 로그아웃 처리
+
+				user = new String[4];
+				user[0] = logInfo[4];
+				user[1] = logInfo[0];
+				user[3] = "-1";
+				bc.logInOut(user);
 				logInfo = null;
+				user = null;
+				
+				
 			}
 		}
 		print(Main);
@@ -247,13 +258,13 @@ public class FrontController {
 		this.print(" ]\n\n");
 		print(" [ "+"카테고리 : "+days +" ]\n\n");
 		// 상품리스트 다차원 배열 출력
-		print(" -------------------------------------------------- \n"+
-				"    상품코드         상품명          단가          수량 \n" +
-				" -------------------------------------------------- \n");
+		print(" --------------------------------------------------------------- \n"+
+				" 상품코드       상품명          단가          수량        금액\n" +
+				" -------------------------------------------------------------- \n");
 		if(salesList != null) {
 			for (int i = 0; i < salesList.length; i++) {
 				for (int j = 0; j < salesList[0].length; j++) {
-					print(" " + salesList[i][j] + "\t\t");
+					print(" " + salesList[i][j] + "     \t");
 
 				}
 				tot += (Integer.parseInt(salesList[i][2])*Integer.parseInt(salesList[i][3]));
@@ -436,10 +447,10 @@ public class FrontController {
 
 	// LogIn Job Contol
 	private String[] logIn(String title) {
-		String[] userInfo = new String[3];
-		userInfo[0] = "A1";
-
+		String[] userInfo = new String[4];
+		
 		this.print(title);
+
 		this.print(" [ Log In ]\n\n"); 
 		this.print(" [ Employee Code ] : ");
 		userInfo[1] = sc.next();
@@ -449,7 +460,11 @@ public class FrontController {
 		}else {		
 			this.print(" [ Access Code ]   : ");
 			userInfo[2] = sc.next();
+			print(" [ STCODE : ] : ");
+			userInfo[0] = sc.next();
+			userInfo[3] = "1";
 		}
+		
 		return userInfo;
 	}
 
@@ -534,7 +549,10 @@ public class FrontController {
 
 		for (int i = 0; i < regMain.length; i++) {
 			print(regMain[i]);
-			userInfo[i] = sc.next();
+			if(i!=3) {
+			userInfo[i] = sc.next();}else {
+				userInfo[3] = result[4];
+			}
 		}
 
 		return userInfo;
@@ -713,7 +731,7 @@ public class FrontController {
 		Questions[0] = " [ Employee  Code ] : ";
 		Questions[1] = " [  Access  Code  ] : ";
 		Questions[2] = " [ Employee  Name ] : ";
-		Questions[3] = " [ Employee Phone ] : ";
+		Questions[3] = "";
 		Questions[4] = " [ Employee Level ] : ";
 		return Questions;
 	}

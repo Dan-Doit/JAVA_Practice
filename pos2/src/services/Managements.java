@@ -107,15 +107,16 @@ public class Managements {
 		}
 		
 		
-		
-		goOut.sort(new Comparator<GoodsInfoBean>() {
+		if (goOut!=null) {
+			goOut.sort(new Comparator<GoodsInfoBean>() {
 
-			public int compare(GoodsInfoBean arg0, GoodsInfoBean arg1) {
-				
-				return arg1.getGoodsqty() - arg0.getGoodsqty();
-			}
-		});
+				public int compare(GoodsInfoBean arg0, GoodsInfoBean arg1) {
+					
+					return arg1.getGoodsqty() - arg0.getGoodsqty();
+				}
+			});
 
+		}
 
 		return goOut;
 	}

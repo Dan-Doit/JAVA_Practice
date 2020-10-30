@@ -1,6 +1,12 @@
 package data;
 
 public class UserInfoBean {
+	
+	
+
+	private String Today;
+	private String Emcode;
+	private String Cmcode;
 	private String stCode;
 	private String employeeCode;
 	private String accessCode;
@@ -10,6 +16,24 @@ public class UserInfoBean {
 	private String accessTime;
 	
 	
+	public String getToday() {
+		return Today;
+	}
+	public void setToday(String today) {
+		Today = today;
+	}
+	public String getEmcode() {
+		return Emcode;
+	}
+	public void setEmcode(String emcode) {
+		Emcode = emcode;
+	}
+	public String getCmcode() {
+		return Cmcode;
+	}
+	public void setCmcode(String cmcode) {
+		Cmcode = cmcode;
+	}
 	public String getStCode() {
 		return stCode;
 	}

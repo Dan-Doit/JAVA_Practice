@@ -1,16 +1,18 @@
 package services;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import data.DataAccessObject;
 import data.GoodsInfoBean;
+import data.UserInfoBean;
 
 public class Sales {
 
 	DataAccessObject dao;
 
 	public Sales() {
-		dao = new DataAccessObject();
 
 	}
 	
@@ -34,20 +36,35 @@ public class Sales {
 		return salesList;
 	}
 	
-	public void entrance(ArrayList<GoodsInfoBean> goodsStack) {
+	public void entrance(ArrayList<GoodsInfoBean> goodsStack,UserInfoBean uib) {
+
 		// 상품판매 정보 저장
-		stackSalesInfo(goodsStack);
+		stackSalesInfo(goodsStack,uib);
 	}
 
 	private void goodsSearch(GoodsInfoBean gib) {
-		dao.getGoodsInfo(3,gib);
+		dao = new DataAccessObject();
+		dao.setAutoTransaction(false);
+		dao.getGoodsInfo(gib);
 	}
 
-	private void stackSalesInfo(ArrayList<GoodsInfoBean> goodsStack) {
-		dao.stackSalesInfo(2, goodsStack);
+	private void stackSalesInfo(ArrayList<GoodsInfoBean> goodsStack, UserInfoBean uib) {
+		dao = new DataAccessObject();
+		dao.setAutoTransaction(false);
+		int count = 0;
+		
+		for(GoodsInfoBean gib : goodsStack) {
+			dao.stackSalesInfo(gib,count,uib);
+			count++;
+		}
+		dao.endAutoTransaction(true);
+		
 	}
 	
 	private ArrayList<GoodsInfoBean> getSalesList(GoodsInfoBean gib) {
+		dao = new DataAccessObject();
+		dao.setAutoTransaction(false);
+		
 		ArrayList<GoodsInfoBean> salesList;
 		salesList = dao.getSalesList(gib,2);
 		

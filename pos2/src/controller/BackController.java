@@ -1,6 +1,8 @@
 package controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import data.GoodsInfoBean;
 import data.UserInfoBean;
@@ -38,16 +40,18 @@ public class BackController {
 			ac.entrance("A4",uib,null);
 			userinfo = null;
 		}
-
-		if (userinfo != null && userinfo.get(0).getUserName()!=null) {
+		
+		
+		if (userinfo != null && userinfo.size()!=0) {
 			userAccess = new String[5];
 			userAccess[0] = userinfo.get(0).getEmployeeCode();
 			userAccess[1] = userinfo.get(0).getUserName();
 			userAccess[2] = userinfo.get(0).isUserLevel()? "Manager":"Mate";
 			userAccess[3] = userinfo.get(0).getAccessTime();
 			userAccess[4] = userinfo.get(0).getStCode();
-		}else {userAccess = null;
-		}
+		}else {userAccess = null;}
+		
+
 		return userAccess;
 	}
 
@@ -93,12 +97,26 @@ public class BackController {
 		return goodsInfo;
 	}
 	
-	public void stackGoodsInfo(String[][] goodsList) {
+	public void stackGoodsInfo(String[][] goodsList, String[] user) {
+		
 		// 리스트배열 선언으로 2차원 배열값 빈에 저장하기
 		ArrayList<GoodsInfoBean> goodsStack = new ArrayList<GoodsInfoBean>();
+		
 		GoodsInfoBean gib;
+		UserInfoBean uib = new UserInfoBean();
+		Date day = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		String days = sdf.format(day);
+		
+		uib.setStCode(user[4]);
+		uib.setToday(days);
+		uib.setEmcode(user[0]);
+		uib.setCmcode("00000");
+		
+
 		for (int i = 0; i < goodsList.length; i++) {
 			gib = new GoodsInfoBean();
+
 			gib.setGoodsCode(goodsList[i][0]);
 			gib.setGoodsName(goodsList[i][1]);
 			gib.setGoodsPrice(Integer.parseInt(goodsList[i][2]));
@@ -108,7 +126,7 @@ public class BackController {
 			goodsStack.add(gib);
 		}
 		
-		ss.entrance(goodsStack);
+		ss.entrance(goodsStack,uib);
 	}
 	
 
@@ -145,8 +163,8 @@ public class BackController {
 			
 			arrCancelList.add(gib);
 		}
-		
-		ss.entrance(arrCancelList);
+	
+		ss.entrance(arrCancelList,null);
 		
 	}
 	
@@ -187,7 +205,9 @@ public class BackController {
 	}
 	// 일별 월별 매출 현황 정보 가져오기
 	public String[][] getDailySales(String days, String ordCode) {
+		
 		ArrayList<GoodsInfoBean> goOut;
+		String[][] dailyList;
 		GoodsInfoBean gib = new GoodsInfoBean();
 		gib.setUniqCode(days);
 		int count = 0;
@@ -197,9 +217,9 @@ public class BackController {
 		}else {
 			goOut = mg.entrance(3, gib);
 		}
-
-		String[][] dailyList = new String[goOut.size()][5];
-
+		if(goOut!=null) {
+		 dailyList = new String[goOut.size()][5];
+		
 		for (GoodsInfoBean i : goOut) {
 			dailyList[count][0] = i.getGoodsCode();
 			dailyList[count][1] = i.getGoodsName();
@@ -208,6 +228,7 @@ public class BackController {
 			dailyList[count][4] = i.getAmount()+"";
 			count++;
 		}
+		}else {dailyList=null;}
 		return dailyList;
 	}
 	

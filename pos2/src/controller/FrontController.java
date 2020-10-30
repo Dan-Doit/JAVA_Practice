@@ -62,7 +62,7 @@ public class FrontController {
 									goodsList[i][5] = uniCode;
 								}
 								// 판매정보 저장
-								bc.stackGoodsInfo(goodsList);
+								bc.stackGoodsInfo(goodsList, logInfo);
 
 								goodsCode = null;
 								goodsList = null;
@@ -215,15 +215,15 @@ public class FrontController {
 		this.print(" ]\n\n\n");
 		print(" [ "+"카테고리 : "+days +" ]\n\n");
 		// 상품리스트 다차원 배열 출력
-		print(" -------------------------------------------------- \n"+
-				" 순위       상품코드        상품명            수량 \n" +
-				" -------------------------------------------------- \n");
+		print(" --------------------------------------------------------------- \n"+
+				"순위      상품코드     상품명        단가        수량      금액\n" +
+				" -------------------------------------------------------------- \n");
 		if(salesList != null) {
 			for (int i = 0; i < salesList.length; i++) {
 				print("  " + (i+1) + "        ");
 				for (int j = 0; j < salesList[0].length; j++) {
-					if(j!=2) {
-					print(salesList[i][j] + "\t\t");
+					if(true) {
+					print(salesList[i][j] + "  \t");
 					}
 				}
 				print("\n");
@@ -263,8 +263,10 @@ public class FrontController {
 				" -------------------------------------------------------------- \n");
 		if(salesList != null) {
 			for (int i = 0; i < salesList.length; i++) {
+				print("   ");
 				for (int j = 0; j < salesList[0].length; j++) {
-					print(" " + salesList[i][j] + "     \t");
+					print(salesList[i][j] + "  \t");
+					print("   ");
 
 				}
 				tot += (Integer.parseInt(salesList[i][2])*Integer.parseInt(salesList[i][3]));
@@ -644,12 +646,7 @@ public class FrontController {
 	// 데이터 스택쌓기
 	private String[][] summaryGoods(String[] newGoods, String[][] goodsList) {
 
-		// 유통기한 처리
-		Date now = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-		String today = sdf.format(now);
-		// 유통기한이 오늘보다 크면 스택 아니면 그대로 반출
-		if (Integer.parseInt(newGoods[4])>=Integer.parseInt(today)) {
+
 
 			String[][] temp = null;
 			if (goodsList==null) {
@@ -677,7 +674,7 @@ public class FrontController {
 				}
 			}
 			goodsList[goodsList.length-1] = newGoods;
-		}
+
 		return goodsList;
 	}
 
@@ -706,21 +703,18 @@ public class FrontController {
 	// 타이틀 작성
 	private String makeTitle() {
 		StringBuffer sb = new StringBuffer();
-
-		sb.append("\n\n");
-		sb.append(" *************************************************\n");
-		sb.append("\n");
-		sb.append("            Point Of Sales System v1.0\n");
-		sb.append("\n");
-		sb.append("                       ★ ★ ★ ★");
-		sb.append("                       ☆ ☆ ☆ ☆");
-		sb.append("                       ☆ ☆ ☆ ☆");
-		sb.append("                       ☆ ☆ ☆ ☆");
-		sb.append("\n");   
-		sb.append("\n");  
-		sb.append("                                Designed by ApJul\n");
-		sb.append("\n");
-		sb.append(" *************************************************\n");
+		  
+		  sb.append("\n");
+	      sb.append(" ┌───────────────────────────────────────────┐\n");
+	      sb.append(" │             Point Of Sales System v1.0    │\n");
+	      sb.append(" ├───────────────────────────────────────────┤\n");
+	      sb.append(" │                              GOD - dan    │\n");
+	      sb.append(" │                             Hyeongjoon    │\n");
+	      sb.append(" │                                Seungha    │\n");
+	      sb.append(" │                               Donghoon    │\n");
+	      sb.append(" ├───────────────────────────────────────────┤\n");      
+	      sb.append(" │                      Designed by ApJul    │\n");
+	      sb.append(" └───────────────────────────────────────────┘\n");
 
 
 		return sb.toString();

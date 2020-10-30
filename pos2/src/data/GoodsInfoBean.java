@@ -2,6 +2,8 @@ package data;
 
 public class GoodsInfoBean {
 	
+	
+
 	private String uniqCode;
 	private String goodsCode;
 	private String goodsName;
@@ -10,6 +12,9 @@ public class GoodsInfoBean {
 	private String expireDate;
 	private String safetyQty;
 	private int Amount;
+	
+	
+	
 	
 	public int getAmount() {
 		return Amount;

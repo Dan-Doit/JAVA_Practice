@@ -13,7 +13,7 @@ public class Sales {
 	DataAccessObject dao;
 
 	public Sales() {
-
+		dao = new DataAccessObject();
 	}
 	
 	public ArrayList<GoodsInfoBean> entrance(GoodsInfoBean gib,String reqCode) {
@@ -41,28 +41,38 @@ public class Sales {
 		// 상품판매 정보 저장
 		stackSalesInfo(goodsStack,uib);
 	}
+	
+	
+	
 
 	private void goodsSearch(GoodsInfoBean gib) {
-		dao = new DataAccessObject();
 		dao.setAutoTransaction(false);
+		dao.createConnection();
 		dao.getGoodsInfo(gib);
 	}
 
 	private void stackSalesInfo(ArrayList<GoodsInfoBean> goodsStack, UserInfoBean uib) {
-		dao = new DataAccessObject();
+		boolean tran = false;
+		dao.createConnection();
 		dao.setAutoTransaction(false);
 		int count = 0;
 		
+	
 		for(GoodsInfoBean gib : goodsStack) {
-			dao.stackSalesInfo(gib,count,uib);
+			if(dao.stackSalesInfo(gib,count,uib)) {
+				tran = true;
+			}else{tran=false;
+			break;}
+			
 			count++;
 		}
-		dao.endAutoTransaction(true);
+		
+		dao.endAutoTransaction(tran);
 		
 	}
 	
 	private ArrayList<GoodsInfoBean> getSalesList(GoodsInfoBean gib) {
-		dao = new DataAccessObject();
+		dao.createConnection();
 		dao.setAutoTransaction(false);
 		
 		ArrayList<GoodsInfoBean> salesList;

@@ -9,7 +9,9 @@ public class Access {
 
 	DataAccessObject dao;
 
-	public Access() { } 
+	public Access() {
+		dao = new DataAccessObject();
+	} 
 
 	public void entrance(String reqv, UserInfoBean uib,ArrayList<UserInfoBean> userinfo) {
 		switch (reqv) {
@@ -31,7 +33,7 @@ public class Access {
 	}
 
 	private void logIn(UserInfoBean uib, ArrayList<UserInfoBean> userinfo) {
-		dao = new DataAccessObject();
+		dao.createConnection();
 		dao.setAutoTransaction(false);
 
 		if (dao.isEmployee(uib)) {	
@@ -62,7 +64,7 @@ public class Access {
 	private void logOut(UserInfoBean uib) {
 		
 		boolean tran = false;
-		dao = new DataAccessObject();
+		dao.createConnection();
 		dao.setAutoTransaction(false);
 		
 		if(dao.setLogInInfo(uib)) tran = true;
@@ -78,7 +80,7 @@ public class Access {
 
 		boolean tran = false;
 
-		dao = new DataAccessObject();
+		dao.createConnection();
 
 		dao.setAutoTransaction(false);
 
@@ -92,7 +94,7 @@ public class Access {
 	// 유저 수정
 	private void userMod(UserInfoBean uib) {
 		boolean tran = false;
-		dao = new DataAccessObject();
+		dao.createConnection();
 
 		dao.setAutoTransaction(false);
 

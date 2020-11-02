@@ -104,6 +104,7 @@ public class BackController {
 		
 		GoodsInfoBean gib;
 		UserInfoBean uib = new UserInfoBean();
+		
 		Date day = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		String days = sdf.format(day);

@@ -1,11 +1,13 @@
 package data;
 
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 
 
@@ -66,15 +68,19 @@ public class DataAccessObject {
 
 	// 생성자에서 DB연동
 	public DataAccessObject(){
+
+	}
+	
+	// 데이터배이스 접속 매서드
+	public void createConnection() {
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			ct = DriverManager.getConnection("jdbc:oracle:thin:@192.168.0.220:1521:xe","DOOLY","0000");
 
 		} catch (Exception e) {
-			System.out.println("Error of Failed");
+			System.out.println("***** Error of Failed *****");
 		}
 	}
-
 
 
 
@@ -287,6 +293,7 @@ public class DataAccessObject {
 	// 상품 정보 등록하기
 	public boolean stackSalesInfo(GoodsInfoBean gib, int count, UserInfoBean uib) {
 		String sql;
+		CallableStatement proc;
 		boolean result = false;
 		if(count==0) {
 
@@ -306,17 +313,18 @@ public class DataAccessObject {
 				e.printStackTrace();
 			}
 		}
-
-		sql = "INSERT INTO OT(OT_ODCODE,OT_GOCODE,OT_QTY,OT_STATE) VALUES (TO_DATE(?,\'YYYYMMDDHH24MISS\'),?,?,?)";
+		
+		sql = "{call INS_OT(?,?,?,?)}";
 		try {
-			query = ct.prepareStatement(sql);
-			query.setNString(1, uib.getToday());
-			query.setNString(2, gib.getGoodsCode());
-			query.setInt(3, gib.getGoodsqty());
-			query.setNString(4, "P");
+			proc = ct.prepareCall(sql);
+			proc.setNString(1, uib.getToday());
+			proc.setNString(2, gib.getGoodsCode());
+			proc.setInt(3, gib.getGoodsqty());
+			proc.setNString(4, "P");
 
 
-			query.executeUpdate();
+			result = (proc.executeUpdate()==1)?true:false;
+			proc.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -408,6 +416,32 @@ public void goodsPriceMod(int fileIndex, ArrayList<GoodsInfoBean> goodsList) {
 
 
 }
+
+
+public String regOrder(String stCode, String emCode, String cmCode, String state) {
+	String odCode = null;
+	CallableStatement proc;
+	String sql = "{call REG_ORDER(?, ?, ?, ?, ?)}";
+	
+	try {
+		proc = ct.prepareCall(sql);
+		proc.setNString(1, stCode);
+		proc.setNString(2, emCode);
+		proc.setNString(3, cmCode);
+		proc.setNString(4, state);
+		proc.registerOutParameter(5, Types.NVARCHAR);
+		
+		proc.execute();
+		odCode = proc.getString(5);
+		
+		proc.close();
+	} catch (SQLException e) {
+		e.printStackTrace();
+	}
+	
+	return odCode;
+}
+
 }
 
 

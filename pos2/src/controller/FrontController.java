@@ -53,14 +53,14 @@ public class FrontController {
 								if(goodsCode.equals("n")) {break;}
 							}
 							if(payments(goodsList)) {
-								// 주문코드 작성(yyyyMMddhhmmss)
-								Date now = new Date();
-								SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-								String uniCode = sdf.format(now);
-
-								for (int i = 0; i < goodsList.length; i++) {
-									goodsList[i][5] = uniCode;
-								}
+//								// 주문코드 작성(yyyyMMddhhmmss)
+//								Date now = new Date();
+//								SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+//								String uniCode = sdf.format(now);
+//
+//								for (int i = 0; i < goodsList.length; i++) {
+//									goodsList[i][5] = uniCode;
+//								}
 								// 판매정보 저장
 								bc.stackGoodsInfo(goodsList, logInfo);
 

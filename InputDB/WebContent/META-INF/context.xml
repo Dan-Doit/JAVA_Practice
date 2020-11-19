@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Context>
+<Resource
+	name = "jdbc/OracleDB"
+	auth = "Container"
+	type = "javax.sql.DataSource"
+	
+	username = "DOOLY"
+	password = "0000"
+	driverClassName = "oracle.jdbc.driver.OracleDriver"
+	factory = "org.apache.tomcat.dbcp.dbcp2.BasicDataSourceFactory"
+	url = "jdbc:oracle:thin:@192.168.0.220:1521:xe"
+	maxActive = "500" 
+	maxIdle = "100"
+	
+/>
+<!-- maxActive 는 얼마나 접속을 허용하는가이다. 그래서 숫자가 높을수록 많은 쓰레드를 줄수있는데
+	보통 개인이 운영하는 서버는 500이고 팀단위는 1000으로 한다. -->
+<!-- 커넥션을 사용하지 않을때 기본적으로 유지되는 개수 -->
+</Context>
+

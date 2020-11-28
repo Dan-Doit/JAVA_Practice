@@ -1,0 +1,5 @@
+<textarea style="resize: none;"></textarea>
+
+enctype="multipart/form-data"
+
+√‚√≥: https://kdarkdev.tistory.com/197 [kdarkdev]

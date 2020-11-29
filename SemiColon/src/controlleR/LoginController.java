@@ -41,6 +41,7 @@ public class LoginController extends HttpServlet {
 			HttpSession ss = request.getSession();
 			
 			ss.setAttribute("info", uib);
+			ss.setAttribute("is", uib.getUserName());
 			response.sendRedirect("Main.jsp");
 		}else {
 			RequestDispatcher rd = request.getRequestDispatcher("LogFail.jsp");

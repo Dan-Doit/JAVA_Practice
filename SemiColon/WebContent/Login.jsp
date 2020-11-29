@@ -37,7 +37,7 @@
 	
 	.form-signin .form-control {
   		position: relative;
-  		height: auto;
+  		height: auto;	
   		-webkit-box-sizing: border-box;
      	-moz-box-sizing: border-box;
         	 box-sizing: border-box;
@@ -56,10 +56,10 @@
 			<h2 class="card-title text-center" style="color:#113366;">팀 세미콜론</h2>
 		</div>
 		<div class="card-body">
-      <form class="form-signin" onSubmit="logincall();return false" action="LoginController" method="POST" name="Logform">
+      <form class="form-signin" onSubmit="logincall();return false" action="LoginController" autocomplete="off" method="POST" name="Logform">
         <h5 class="form-signin-heading">로그인 정보를 입력하세요</h5>
         <label for="inputEmail" class="sr-only">Your ID</label>
-        <input type="text" id="uid" class="form-control" placeholder="Your ID" required autofocus name="id"><BR>
+        <input type="text" id="uid" class="form-control" placeholder="Your ID" required autocomplete="off" autofocus name="id"><BR>
         <label for="inputPassword" class="sr-only">Password</label>
         <input type="password" id="upw" class="form-control" placeholder="Password" required name="pwd"><br>
         <div class="checkbox">
@@ -69,6 +69,7 @@
         </div>
         <button id="btn-Yes" class="btn btn-lg btn-primary btn-block">로 그 인</button>
         <button id="btn-Yes" class="btn btn-lg btn-primary btn-block" onclick="regUser()">처음이세요?</button>
+        <button id="btn-Yes" class="btn btn-lg btn-primary btn-block" onclick="goBoard()">게시판으로가기</button>
       </form>
       
       
@@ -83,6 +84,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> 
 	<script>
+	function goBoard() {
+		event.preventDefault();
+		location.href = "SemiBoard.jsp"
+	}
+	
 	function regUser() {
 		event.preventDefault();
 		location.href = "RegUser.jsp"

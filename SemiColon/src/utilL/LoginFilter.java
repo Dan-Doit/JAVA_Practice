@@ -7,6 +7,7 @@ import java.util.List;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -32,8 +33,11 @@ public class LoginFilter implements Filter {
 		whiteList.add("/Login.jsp");
 		whiteList.add("/LoginController");
 		whiteList.add("RegUser.jsp");
-		whiteList.add("RegUser.jsp");
-		whiteList.add("RegUser.jsp");
+		whiteList.add("RegUser1-1.jsp");
+		whiteList.add("RegUser2.jsp");
+		whiteList.add("RegUser3.jsp");
+		whiteList.add("RegController");
+		whiteList.add("isSame");
 
 		/* URL방식
 		 * Port 번호가 필수적으로 붙어야함 만약 붙지 않는다면 기본 Port이다.
@@ -62,6 +66,7 @@ public class LoginFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
 		HttpServletRequest rqs = (HttpServletRequest) request;
+		HttpServletResponse rsp = (HttpServletResponse) response;
 
 		// 화이트리스트 uri 호출
 		String uri = rqs.getRequestURI();
@@ -95,10 +100,11 @@ public class LoginFilter implements Filter {
 				String member = (String)ss.getAttribute("is");
 				System.out.println(member);
 				
-				if(member==null) {
-					HttpServletResponse rsp = (HttpServletResponse) response;
-					rsp.sendRedirect("Login.jsp");
-					return;			
+				if(member==null) {			
+					RequestDispatcher rd = rqs.getRequestDispatcher("RegUser3.jsp");
+					rqs.setAttribute("requestV", 1);
+					rqs.setAttribute("issucess", "로그인이 필요합니다.");
+					rd.forward(rqs, rsp);		
 
 			}
 		}

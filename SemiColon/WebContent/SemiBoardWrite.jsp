@@ -27,7 +27,7 @@
   		font-family: "Nanum Gothic", arial, helvetica, sans-serif;
 	}
 
-.card {
+	.card {
         margin: 0 auto; /* Added */
         float: none; /* Added */
         margin-bottom: 10px; /* Added */
@@ -67,7 +67,7 @@
         <input type="hidden" id="uid" class="form-control" value="${info.userId}" name="id"><BR>
         <input type="hidden" id="uid" class="form-control" value="${info.userName}" name="name"><BR>
         <h5 class="form-signin-heading">첨부파일</h5>
-        <input type="file" id="uid" class="form-control" placeholder="file" autofocus name="file"><BR>
+        <input type="file" id="uid" class="form-control" placeholder="file" name="file"><BR>
         <h5 class="form-signin-heading">내용</h5>
         <textarea name="content" id ="uid" rows="10" style="resize: none" class="form-control" 
         placeholder="작성되는 내용에 욕이나 비방의 문구가 달리면 회원이 탈퇴될수있습니다." required autofocus></textarea>

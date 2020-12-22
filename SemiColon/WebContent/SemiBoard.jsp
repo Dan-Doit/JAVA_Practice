@@ -83,13 +83,7 @@
       <h2 class="card-title text-center" style="color:#113366;">SEMI 게시판입니다.</h2><br><br><br>
       <div class="card-table">
       <table style="margin: auto;">
-        <colgroup>
-          <col width="10%"/>
-          <col width="35%"/>
-          <col width="20%"/>
-          <col width="25%"/>
-          <col width="10%"/>
-        </colgroup>
+`
         <tr>
           <th>글번호</th><th>제목</th><th>작성자</th><th>시간</th><th>조회수</th>
         </tr>

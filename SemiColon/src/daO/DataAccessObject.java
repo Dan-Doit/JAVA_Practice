@@ -1,5 +1,7 @@
 package daO;
 
+import static utilL.JdbcUtil.*;
+
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,7 +10,9 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 
-import static utilL.JdbcUtil.*;
+import daO.BoardInfoBean;
+import daO.PageInfoBean;
+import daO.UserInfoBean;
 
 
 public class DataAccessObject {

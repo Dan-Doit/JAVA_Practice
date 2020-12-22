@@ -49,7 +49,7 @@ public class LoginFilter implements Filter {
 		 * 이 경우에는 페이지의 정보만 알면된다.
 		 * */
 		sResourceList = new ArrayList<String>();
-		sResourceList.add("/resource/");
+		sResourceList.add("/resource");
 
 	}
 
@@ -70,14 +70,11 @@ public class LoginFilter implements Filter {
 
 		// 화이트리스트 uri 호출
 		String uri = rqs.getRequestURI();
-		System.out.println(uri);
 		// 비교장치
 		boolean isAccess = true;
 		for(int i = 0; i < whiteList.size();i++) {
 		if (uri.contains(whiteList.get(i))) {
-			System.out.println(whiteList.get(i));
 				isAccess = false;
-				System.out.println(isAccess);
 			}
 		}
 

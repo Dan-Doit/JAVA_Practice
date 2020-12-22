@@ -1,11 +1,12 @@
 package servicE;
 
 import static utilL.JdbcUtil.*;
+
 import java.sql.Connection;
 import java.util.ArrayList;
 
-import daO.BoardInfoBean;
 import daO.DataAccessObject;
+import daO.BoardInfoBean;
 import daO.PageInfoBean;
 
 public class BoardService {

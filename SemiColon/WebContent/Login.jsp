@@ -91,7 +91,7 @@
 	
 	function regUser() {
 		event.preventDefault();
-		location.href = "RegUser.jsp"
+		location.href = "RegUser2.jsp"
 	}
 	
 	function logincall() {
